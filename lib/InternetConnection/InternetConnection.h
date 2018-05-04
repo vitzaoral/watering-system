@@ -2,6 +2,7 @@
 #define __InternetConnection_H
 
 #include <ESP8266WiFi.h>
+#include <Watering.h>
 
 class InternetConnection
 {

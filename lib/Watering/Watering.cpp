@@ -40,6 +40,7 @@ long Watering::getWaterLevel()
 
 void Watering::turnOnPump1()
 {
+    Serial.println("Turn ON pump1");
     // TODO: refactor
     for (int i = 0; i <= 1024; ++i)
     {
@@ -50,6 +51,7 @@ void Watering::turnOnPump1()
 
 void Watering::turnOffPump1()
 {
+    Serial.println("Turn OFF pump1");
     // TODO: refactor
     for (int i = 1024; i >= 0; --i)
     {
@@ -60,6 +62,7 @@ void Watering::turnOffPump1()
 
 void Watering::turnOnPump2()
 {
+    Serial.println("Turn ON pump2");
     // TODO: refactor
     for (int i = 0; i <= 1024; ++i)
     {
@@ -70,6 +73,7 @@ void Watering::turnOnPump2()
 
 void Watering::turnOffPump2()
 {
+    Serial.println("Turn OFF pump2");
     // TODO: refactor
     for (int i = 1024; i >= 0; --i)
     {

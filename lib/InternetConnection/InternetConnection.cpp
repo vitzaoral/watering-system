@@ -5,6 +5,8 @@
 
 // Blynk virtual pins:
 // V1 - water level (long)
+// V2 - pump 1
+// V3 - pump 2
 
 WiFiClient client;
 Settings settings;
@@ -15,6 +17,18 @@ const char *blynkAuth = settings.blynkAuth;
 
 // number of attempts to connecting WIFI, API etc.
 const int timeout = 10;
+
+// Enable/disable pump1
+BLYNK_WRITE(V2)
+{
+    param.asInt() ? Watering::turnOnPump1() :Watering::turnOffPump1();
+}
+
+// Enable/disable pump1
+BLYNK_WRITE(V3)
+{
+    param.asInt() ? Watering::turnOnPump2() :Watering::turnOffPump2();
+}
 
 // Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
 bool InternetConnection::initializeThingSpeak(void)
