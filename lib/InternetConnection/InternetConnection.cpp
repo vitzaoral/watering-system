@@ -3,6 +3,9 @@
 #include "../../src/settings.cpp"
 #include <BlynkSimpleEsp8266.h>
 
+// Blynk virtual pins:
+// V1 - water level (long)
+
 WiFiClient client;
 Settings settings;
 
@@ -62,4 +65,20 @@ bool InternetConnection::initializeBlynk(void)
 void InternetConnection::runBlynk(void)
 {
     Blynk.run();
+}
+
+bool InternetConnection::sendWaterLevelToBlynk(long waterLevel)
+{
+    if (Blynk.connected())
+    {
+        Blynk.virtualWrite(V1, waterLevel);
+        Serial.println("Send water level to Blynk OK");
+        Blynk.run();
+        return true;
+    }
+    else
+    {
+        Serial.println("Blynk is not connected.");
+        return false;
+    }
 }
