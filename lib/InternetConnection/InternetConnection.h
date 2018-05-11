@@ -3,6 +3,7 @@
 
 #include <ESP8266WiFi.h>
 #include <Watering.h>
+#include <SoilMoisture.h>
 
 class InternetConnection
 {
@@ -11,6 +12,7 @@ class InternetConnection
     bool initializeBlynk(void);
     void runBlynk(void);
     bool sendWaterLevelToBlynk(long);
+    bool sendSoilMoistureToBlynk(SoilMoistureStatus);
 };
 
 #endif

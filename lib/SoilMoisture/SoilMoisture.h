@@ -15,12 +15,12 @@ struct SoilMoistureStatus
 class SoilMoisture
 {
   public:
-    void initialize();
-    SoilMoistureStatus getSoilMoistureStatus();
+    static void initialize();
+    static SoilMoistureStatus getSoilMoistureStatus();
 
   private:
-    void changeMux(int, int, int);
-    int getMoistureValueFromAnalogValue(float);
+    static void changeMux(int, int, int);
+    static int getMoistureValueFromAnalogValue(float);
 };
 
 #endif

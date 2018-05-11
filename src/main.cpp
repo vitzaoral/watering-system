@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <InternetConnection.h>
 #include <Watering.h>
+#include <SoilMoisture.h>
 #include <Ticker.h>
 
 const int sendDataToInternetInterval = 60000;
@@ -26,7 +27,9 @@ void sendDataToInternet()
     if (apisAreConnected)
     {
         long waterLevel = Watering::getWaterLevel();
+        SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
         bool successBlynk = connection.sendWaterLevelToBlynk(waterLevel);
+        successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
 
         if (successBlynk)
         {
@@ -61,6 +64,8 @@ void setup()
     Serial.begin(9600);
     delay(100);
     Watering::initialize();
+    SoilMoisture::initialize();
+
     initializeInternetConnection();
     startTimers();
 }

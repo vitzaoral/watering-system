@@ -8,6 +8,9 @@
 // V2 - pump 1
 // V3 - pump 2
 
+// MoistureStatus
+// V4, V5, V6, V7, V8
+
 WiFiClient client;
 Settings settings;
 
@@ -87,6 +90,25 @@ bool InternetConnection::sendWaterLevelToBlynk(long waterLevel)
     {
         Blynk.virtualWrite(V1, waterLevel);
         Serial.println("Send water level to Blynk OK");
+        Blynk.run();
+        return true;
+    }
+    else
+    {
+        Serial.println("Blynk is not connected.");
+        return false;
+    }
+}
+
+bool InternetConnection::sendSoilMoistureToBlynk(SoilMoistureStatus status) {
+if (Blynk.connected())
+    {
+        Blynk.virtualWrite(V4, status.A);
+        Blynk.virtualWrite(V5, status.B);
+        Blynk.virtualWrite(V6, status.C);
+        Blynk.virtualWrite(V7, status.D);
+        Blynk.virtualWrite(V8, status.E);
+        Serial.println("Send moisture status to Blynk OK");
         Blynk.run();
         return true;
     }
