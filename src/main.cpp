@@ -5,7 +5,7 @@
 #include <SoilMoisture.h>
 #include <Ticker.h>
 
-const int sendDataToInternetInterval = 15000;
+const int sendDataToInternetInterval = 60000;
 
 InternetConnection connection;
 MeteoData meteoData;
