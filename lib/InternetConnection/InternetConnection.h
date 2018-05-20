@@ -4,15 +4,18 @@
 #include <ESP8266WiFi.h>
 #include <Watering.h>
 #include <SoilMoisture.h>
+#include <MeteoData.h>
 
 class InternetConnection
 {
-  public:
-    bool initializeThingSpeak(void);
-    bool initializeBlynk(void);
-    void runBlynk(void);
-    bool sendWaterLevelToBlynk(long);
-    bool sendSoilMoistureToBlynk(SoilMoistureStatus);
+public:
+  bool initializeThingSpeak(void);
+  bool initializeBlynk(void);
+  void runBlynk(void);
+  bool sendWaterLevelToBlynk(long);
+  bool sendSoilMoistureToBlynk(SoilMoistureStatus);
+  bool sendMeteoDataToBlynk(MeteoData, bool);
+  void setMeteoDataStatusToBlynk(bool);
 };
 
 #endif

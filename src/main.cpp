@@ -1,12 +1,14 @@
 #include <Arduino.h>
+#include <MeteoData.h>
 #include <InternetConnection.h>
 #include <Watering.h>
 #include <SoilMoisture.h>
 #include <Ticker.h>
 
-const int sendDataToInternetInterval = 60000;
+const int sendDataToInternetInterval = 15000;
 
 InternetConnection connection;
+MeteoData meteoData;
 
 void sendDataToInternet();
 Ticker timerSendDataToInternet(sendDataToInternet, sendDataToInternetInterval);
@@ -26,9 +28,13 @@ void sendDataToInternet()
 {
     if (apisAreConnected)
     {
+        bool successBlynk = false;
         long waterLevel = Watering::getWaterLevel();
+        meteoData.setData();
         SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
-        bool successBlynk = connection.sendWaterLevelToBlynk(waterLevel);
+
+        successBlynk = connection.sendMeteoDataToBlynk(meteoData, meteoData.dataAreValid());
+        successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
         successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
 
         if (successBlynk)

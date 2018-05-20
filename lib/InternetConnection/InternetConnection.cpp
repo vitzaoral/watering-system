@@ -8,8 +8,17 @@
 // V2 - pump 1
 // V3 - pump 2
 
-// MoistureStatus
+// MoistureStatus balcoony
 // V4, V5, V6, V7, V8
+
+// MoistureStatus bedroom
+// V9, V10, V11, V12, V13, V14, V15
+
+// Meteo Data
+// V16 - temperature
+// V17 - humidity
+// V18 - presure
+// V19 - meteo data status
 
 WiFiClient client;
 Settings settings;
@@ -117,4 +126,40 @@ if (Blynk.connected())
         Serial.println("Blynk is not connected.");
         return false;
     }
+}
+
+bool InternetConnection::sendMeteoDataToBlynk(MeteoData meteoData, bool validData)
+{
+    // create data to send to Blynk
+    if (Blynk.connected())
+    {
+        Blynk.virtualWrite(V16, meteoData.temperature);
+        Blynk.virtualWrite(V17, meteoData.humidity);
+        Blynk.virtualWrite(V18, meteoData.presure);
+        setMeteoDataStatusToBlynk(validData);
+        Blynk.run();
+        Serial.println("Send data to Blynk OK");
+        return true;
+    }
+    else
+    {
+        Serial.println("Blynk is not connected");
+        return false;
+    }
+}
+
+// Static method - send message status to Blynk
+void InternetConnection::setMeteoDataStatusToBlynk(bool validData)
+{
+    char *status = (char *)"Data are OK";
+    char *color = (char *)"#00FF00";
+
+    if (!validData)
+    {
+        status = (char *)"Data are invalid";
+        color = (char *)"#FF0000";
+    }
+
+    Blynk.virtualWrite(V19, status);
+    Blynk.setProperty(V19, "color", color);
 }
