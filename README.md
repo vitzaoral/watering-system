@@ -1,5 +1,5 @@
 # Watering system
-IoT watering system based on ESP8266 Wemos D1 Mini. Use soil moisture sensors and temperature sensor, data are send data to Blynk. Water level is checked by ultrasonic distance measuring module. Water pumps are controller by Blynk application manually, powered with 12V (at least 1A) via mosfet modules.
+IoT watering system based on ESP8266 Wemos D1 Mini. Use soil moisture sensors and temperature sensor, data are send to Blynk. Water level is checked by ultrasonic distance measuring module. Water pumps are controller by Blynk application manually, powered with 12V (at least 1A) via mosfet modules.
 Project is free to use, coded in C++, created in Visual Code with [PlatfomIO IDE](http://docs.platformio.org/en/latest/ide/vscode.html).
 
 > To build a project, you need to download all the necessary libraries and create the *settings.cpp* file in the src folder:
@@ -13,7 +13,7 @@ struct Settings
 };
 ```
 
-### Currents list: TODO
+### Currents list:
 * [Wemos D1 Mini](https://www.aliexpress.com/item/D1-mini-V2-Mini-NodeMcu-4M-bytes-Lua-WIFI-Internet-of-Things-development-board-based-ESP8266/32681374223.html)
 * [6x Soil Moisture Sensor](https://www.aliexpress.com/item/Smart-Electronics-Soil-Moisture-Hygrometer-Detection-Humidity-Sensor-Module-For-arduino-Development-Board-DIY-Robot-Smart/32562744759.html)
 * [2x 12V water pump](https://www.aliexpress.com/item/DC-12V-Hydroponics-Heating-Mattress-Food-Mdical-Super-Sound-off-Water-Cooling-Cycle-Brushless-Pressure-Boost/32813036499.html)
