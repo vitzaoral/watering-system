@@ -1,8 +1,6 @@
 # Watering system
-IoT watering system with ESP8266 Wemos D1 Mini. Use soil moisture sensor and temperature sensor and send data to Blynk.
-
-# Description
-TODO: description
+IoT watering system based on ESP8266 Wemos D1 Mini. Use soil moisture sensors and temperature sensor, data are send data to Blynk. Water pumps are controller by Blynk application manually.
+Project is free to use, coded in C++, created in Visual Code with [PlatfomIO IDE](http://docs.platformio.org/en/latest/ide/vscode.html).
 
 > To build a project, you need to download all the necessary libraries and create the *settings.cpp* file in the src folder:
 ```c++
@@ -23,7 +21,7 @@ struct Settings
 * [HC-SR04 ultrasonic distance measuring module](https://www.aliexpress.com/item/1pcs-Ultrasonic-Module-HC-SR04-Distance-Measuring-Transducer-Sensor-HC-SR04-HCSR04/32703532280.html)
 * [74HC4051 Multiplexer](https://www.aliexpress.com/item/10PCS-LOT-CD4051BE-CD4051-4051BE-4051-DIP16-new-and-original-IC/32807746646.html)
 * [GY-BME280-3-3 Temperature/Humidity/Presure sensor](https://www.aliexpress.com/item/1PCS-GY-BME280-3-3-precision-altimeter-atmospheric-pressure-BME280-sensor-module/32767969468.html)
-* [Plastic case](https://www.aliexpress.com/item/85x58x33mm-Waterproof-Clear-Cover-Plastic-Electronic-Cable-Project-Box-Enclosure-Case/32759228444.html)
+* [Plastic case](https://www.aliexpress.com/item/1-piece-158-90-60mm-IP65-waterproof-plastic-case-with-clear-cover-for-electronic-project-Housing/32812690691.html)
 * [Temperature sensor box](https://www.aliexpress.com/item/szomk-plastic-humidity-sensor-project-box-2-pcs-84-27-16mm-diy-wall-mounting-plastic-junction/32586666805.html)
 
 
@@ -34,6 +32,7 @@ struct Settings
 ![Schema](https://github.com/vitzaoral/watering-system/blob/master/schema/watering-system_schema.jpg)
 
 ### PCB circuit:
-
+TODO
 
 ### Blynk:
+TODO
