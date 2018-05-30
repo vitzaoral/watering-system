@@ -17,7 +17,6 @@ void Watering::initialize()
 
 long Watering::getWaterLevel()
 {
-    // TODO: udelat vice mereni a vzit prumer nebo posledni..?
     long distance = 0;
     for (int i = 0; i < 10; i++)
     {
@@ -31,11 +30,18 @@ long Watering::getWaterLevel()
         distance = duration / 58.2;
         Serial.print(distance);
         Serial.println(" cm");
-        //Delay 50ms before next reading.
-        delay(500);
+        //Delay 100ms before next reading.
+        delay(100);
     }
 
-    return distance;
+    // maximum and minimum water level in cm
+    long min = 40;
+    long result = min - distance;
+    // get usable water column
+    Serial.print("Usable water column: ");
+    Serial.print(result);
+    Serial.println(" cm");
+    return result;
 }
 
 void Watering::turnOnPump1()
