@@ -1,6 +1,7 @@
 #ifndef __InternetConnection_H
 #define __InternetConnection_H
 
+#include <ArduinoOTA.h>
 #include <ESP8266WiFi.h>
 #include <Watering.h>
 #include <SoilMoisture.h>
@@ -16,6 +17,8 @@ public:
   bool sendSoilMoistureToBlynk(SoilMoistureStatus);
   bool sendMeteoDataToBlynk(MeteoData, bool);
   void setMeteoDataStatusToBlynk(bool);
+  void initializeOTA(void);
+  void handleOTA(void);
 };
 
 #endif

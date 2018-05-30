@@ -1,7 +1,6 @@
 #include "InternetConnection.h"
-
-#include "../../src/settings.cpp"
 #include <BlynkSimpleEsp8266.h>
+#include "../../src/settings.cpp"
 
 // Blynk virtual pins:
 // V1 - water level (long)
@@ -162,4 +161,17 @@ void InternetConnection::setMeteoDataStatusToBlynk(bool validData)
 
     Blynk.virtualWrite(V19, status);
     Blynk.setProperty(V19, "color", color);
+}
+
+// Run OTA in loop
+void InternetConnection::handleOTA(void)
+{
+    ArduinoOTA.handle();
+}
+
+void InternetConnection::initializeOTA(void)
+{
+    ArduinoOTA.setHostname(settings.hostNameOTA);
+    ArduinoOTA.setPassword(settings.passwordOTA);
+    ArduinoOTA.begin();
 }

@@ -5,7 +5,7 @@
 #include <SoilMoisture.h>
 #include <Ticker.h>
 
-const int sendDataToInternetInterval = 15000;
+const int sendDataToInternetInterval = 30000;
 
 InternetConnection connection;
 MeteoData meteoData;
@@ -21,6 +21,7 @@ void initializeInternetConnection()
     if (connection.initializeThingSpeak())
     {
         apisAreConnected = connection.initializeBlynk();
+        connection.initializeOTA();
     }
 }
 
@@ -80,4 +81,5 @@ void loop()
 {
     updateTimers();
     connection.runBlynk();
+    connection.handleOTA();
 }
