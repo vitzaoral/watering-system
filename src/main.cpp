@@ -18,7 +18,7 @@ bool apisAreConnected = false;
 
 void initializeInternetConnection()
 {
-    if (connection.initializeThingSpeak())
+    if (connection.initialize())
     {
         apisAreConnected = connection.initializeBlynk();
         connection.initializeOTA();
@@ -67,7 +67,6 @@ void updateTimers()
 
 void setup()
 {
-    // TODO: OTA
     Serial.begin(9600);
     delay(100);
     Watering::initialize();

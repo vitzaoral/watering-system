@@ -10,7 +10,7 @@
 class InternetConnection
 {
 public:
-  bool initializeThingSpeak(void);
+  bool initialize(void);
   bool initializeBlynk(void);
   void runBlynk(void);
   bool sendWaterLevelToBlynk(long);

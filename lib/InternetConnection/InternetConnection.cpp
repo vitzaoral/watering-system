@@ -41,8 +41,8 @@ BLYNK_WRITE(V3)
     param.asInt() ? Watering::turnOnPump2() :Watering::turnOffPump2();
 }
 
-// Initialize WiFi connection and ThingSpeak. Return true if connection is sucessfull.
-bool InternetConnection::initializeThingSpeak(void)
+// Initialize WiFi connection. Return true if connection is sucessfull.
+bool InternetConnection::initialize(void)
 {
     WiFi.begin(ssid, password);
 
@@ -65,7 +65,6 @@ bool InternetConnection::initializeThingSpeak(void)
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 
-    //ThingSpeak.begin(client);
     return true;
 }
 
