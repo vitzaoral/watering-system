@@ -4,6 +4,7 @@
 
 // Blynk virtual pins:
 // V1 - water level (long)
+// V20 - water distance (long)
 // V2 - pump 1
 // V3 - pump 2
 
@@ -19,6 +20,10 @@
 // V18 - presure
 // V19 - meteo data status
 
+// WIFI
+// V21 - IP address
+// V22 - WIFI signal strength
+
 WiFiClient client;
 Settings settings;
 
@@ -29,16 +34,16 @@ const char *blynkAuth = settings.blynkAuth;
 // number of attempts to connecting WIFI, API etc.
 const int timeout = 10;
 
-// Enable/disable pump1
+// Enable/disable pump1 - balcony
 BLYNK_WRITE(V2)
 {
-    param.asInt() ? Watering::turnOnPump1() :Watering::turnOffPump1();
+    param.asInt() ? Watering::turnOnPump1() : Watering::turnOffPump1();
 }
 
-// Enable/disable pump1
+// Enable/disable pump2 - bedroom
 BLYNK_WRITE(V3)
 {
-    param.asInt() ? Watering::turnOnPump2() :Watering::turnOffPump2();
+    param.asInt() ? Watering::turnOnPump2() : Watering::turnOffPump2();
 }
 
 // Initialize WiFi connection. Return true if connection is sucessfull.
@@ -62,8 +67,10 @@ bool InternetConnection::initialize(void)
     }
     Serial.println("");
     Serial.println("WiFi connected");
-    Serial.println("IP address: ");
+    Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
+    Serial.print("Wifi signal stregth: ");
+    Serial.println(WiFi.RSSI());
 
     return true;
 }
@@ -82,8 +89,17 @@ bool InternetConnection::initializeBlynk(void)
         Blynk.run();
     }
 
+
     Serial.println(Blynk.connected() ? "Blynk connected" : "Timeout on or internet connection");
-    return Blynk.connected();
+    bool result = Blynk.connected();
+
+    if (result)
+    {
+        // send local IP address and WIFI signal stregth
+        Blynk.virtualWrite(V21, WiFi.localIP().toString());
+        Blynk.virtualWrite(V22, WiFi.RSSI());
+    }
+    return result;
 }
 
 void InternetConnection::runBlynk(void)
@@ -91,11 +107,12 @@ void InternetConnection::runBlynk(void)
     Blynk.run();
 }
 
-bool InternetConnection::sendWaterLevelToBlynk(long waterLevel)
+bool InternetConnection::sendWaterLevelToBlynk(WaterLevel waterLevel)
 {
     if (Blynk.connected())
     {
-        Blynk.virtualWrite(V1, waterLevel);
+        Blynk.virtualWrite(V1, waterLevel.waterLevel);
+        Blynk.virtualWrite(V20, waterLevel.distance);
         Serial.println("Send water level to Blynk OK");
         Blynk.run();
         return true;
@@ -107,8 +124,9 @@ bool InternetConnection::sendWaterLevelToBlynk(long waterLevel)
     }
 }
 
-bool InternetConnection::sendSoilMoistureToBlynk(SoilMoistureStatus status) {
-if (Blynk.connected())
+bool InternetConnection::sendSoilMoistureToBlynk(SoilMoistureStatus status)
+{
+    if (Blynk.connected())
     {
         Blynk.virtualWrite(V4, status.A);
         Blynk.virtualWrite(V5, status.B);

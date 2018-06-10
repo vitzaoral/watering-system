@@ -13,7 +13,7 @@ public:
   bool initialize(void);
   bool initializeBlynk(void);
   void runBlynk(void);
-  bool sendWaterLevelToBlynk(long);
+  bool sendWaterLevelToBlynk(WaterLevel);
   bool sendSoilMoistureToBlynk(SoilMoistureStatus);
   bool sendMeteoDataToBlynk(MeteoData, bool);
   void setMeteoDataStatusToBlynk(bool);

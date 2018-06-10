@@ -1,10 +1,14 @@
 #include "Watering.h"
 
 // PINS
-#define PUMP_1 D8
-#define PUMP_2 D7
+#define PUMP_1 D8 // balcony
+#define PUMP_2 D7 // bedroom
 #define ECHO_TRIG D4
 #define ECHO_ECHO D3
+
+// for mosfets powering pumps declare max values
+const int pump1Max = 700;
+const int pump2Max = 1024;
 
 void Watering::initialize()
 {
@@ -15,8 +19,9 @@ void Watering::initialize()
     pinMode(ECHO_ECHO, INPUT);
 }
 
-long Watering::getWaterLevel()
+WaterLevel Watering::getWaterLevel()
 {
+    WaterLevel waterLevel = {0, 0};
     long distance = 0;
     for (int i = 0; i < 10; i++)
     {
@@ -36,54 +41,55 @@ long Watering::getWaterLevel()
 
     // maximum and minimum water level in cm
     long min = 40;
-    long result = min - distance;
+
+    waterLevel.distance = distance;
+    waterLevel.waterLevel = min - distance;
+
     // get usable water column
     Serial.print("Usable water column: ");
-    Serial.print(result);
+    Serial.print(waterLevel.waterLevel);
     Serial.println(" cm");
-    return result;
+    return waterLevel;
 }
 
 void Watering::turnOnPump1()
 {
     Serial.println("Turn ON pump1");
-    // TODO: refactor
-    for (int i = 0; i <= 1024; ++i)
-    {
-        analogWrite(PUMP_1, i);
-        delay(5);
-    }
+    Watering::turnOnPump(PUMP_1, pump1Max);
 }
 
 void Watering::turnOffPump1()
 {
     Serial.println("Turn OFF pump1");
-    // TODO: refactor
-    for (int i = 1024; i >= 0; --i)
-    {
-        analogWrite(PUMP_1, i);
-        delay(5);
-    }
+    Watering::turnOffPump(PUMP_1, pump1Max);
 }
 
 void Watering::turnOnPump2()
 {
     Serial.println("Turn ON pump2");
-    // TODO: refactor
-    for (int i = 0; i <= 1024; ++i)
-    {
-        analogWrite(PUMP_2, i);
-        delay(5);
-    }
+    Watering::turnOnPump(PUMP_2, pump2Max);
 }
 
 void Watering::turnOffPump2()
 {
     Serial.println("Turn OFF pump2");
-    // TODO: refactor
-    for (int i = 1024; i >= 0; --i)
+   Watering::turnOffPump(PUMP_2, pump2Max);
+}
+
+void Watering::turnOnPump(int pin, int maxValue)
+{
+    for (int i = 0; i <= maxValue; ++i)
     {
-        analogWrite(PUMP_2, i);
+        analogWrite(pin, i);
+        delay(5);
+    }
+}
+
+void Watering::turnOffPump(int pin, int maxValue)
+{
+    for (int i = maxValue; i >= 0; --i)
+    {
+        analogWrite(pin, i);
         delay(5);
     }
 }

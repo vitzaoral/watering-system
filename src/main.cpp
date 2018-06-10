@@ -30,7 +30,7 @@ void sendDataToInternet()
     if (apisAreConnected)
     {
         bool successBlynk = false;
-        long waterLevel = Watering::getWaterLevel();
+        WaterLevel waterLevel = Watering::getWaterLevel();
         meteoData.setData();
         SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
 
