@@ -20,9 +20,13 @@
 // V18 - presure
 // V19 - meteo data status
 
-// WIFI
+// WIFI - balcony system
 // V21 - IP address
 // V22 - WIFI signal strength
+
+// WIFI - bedroom system
+// V23 - IP address
+// V24 - WIFI signal strength
 
 WiFiClient client;
 Settings settings;
@@ -91,15 +95,15 @@ bool InternetConnection::initializeBlynk(void)
 
 
     Serial.println(Blynk.connected() ? "Blynk connected" : "Timeout on or internet connection");
-    bool result = Blynk.connected();
+    bool connected = Blynk.connected();
 
-    if (result)
+    if (connected)
     {
         // send local IP address and WIFI signal stregth
         Blynk.virtualWrite(V21, WiFi.localIP().toString());
         Blynk.virtualWrite(V22, WiFi.RSSI());
     }
-    return result;
+    return connected;
 }
 
 void InternetConnection::runBlynk(void)
