@@ -4,6 +4,7 @@
 #include <Watering.h>
 #include <SoilMoisture.h>
 #include <Ticker.h>
+#include <EEPROM.h>
 
 const int sendDataToInternetInterval = 30000;
 
@@ -67,6 +68,8 @@ void updateTimers()
 
 void setup()
 {
+    // Two bytes for power of pump1 and pump2
+    EEPROM.begin(2);
     Serial.begin(9600);
     delay(100);
     Watering::initialize();

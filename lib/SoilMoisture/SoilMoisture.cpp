@@ -4,7 +4,7 @@
 #define MUX_A D0
 #define MUX_B D5
 #define MUX_C D6
-#define MOSFET RX
+//#define MOSFET RX
 #define ANALOG_INPUT A0
 
 void SoilMoisture::initialize()
@@ -13,7 +13,7 @@ void SoilMoisture::initialize()
     pinMode(MUX_A, OUTPUT);
     pinMode(MUX_B, OUTPUT);
     pinMode(MUX_C, OUTPUT);
-    pinMode(MOSFET, OUTPUT);
+   // pinMode(MOSFET, OUTPUT);
 }
 
 void SoilMoisture::changeMux(int c, int b, int a)
@@ -36,9 +36,9 @@ SoilMoistureStatus SoilMoisture::getSoilMoistureStatus()
 {
     SoilMoistureStatus status = {0, 0, 0, 0, 0};
 
-    digitalWrite(MOSFET, HIGH);
-    Serial.println("Soil moisture sensors ON");
-    delay(100);
+    // digitalWrite(MOSFET, HIGH);
+    // Serial.println("Soil moisture sensors ON");
+    // delay(100);
     
     changeMux(LOW, LOW, LOW);
     int value = analogRead(ANALOG_INPUT); //Value of the sensor connected Option 0 pin of Mux
@@ -79,8 +79,8 @@ SoilMoistureStatus SoilMoisture::getSoilMoistureStatus()
     // changeMux(HIGH, HIGH, HIGH);
     // value = analogRead(ANALOG_INPUT); //Value of the sensor connected Option 7 pin of Mux
 
-    digitalWrite(MOSFET, LOW);
-    Serial.println("Soil moisture sensors OFF");
+    // digitalWrite(MOSFET, LOW);
+    // Serial.println("Soil moisture sensors OFF");
 
     return status;
 }
