@@ -6,9 +6,11 @@
 #define ECHO_TRIG D4
 #define ECHO_ECHO D3
 
-// for mosfets powering pumps declare max values
-const int pump1Max = 700;
-const int pump2Max = 1024;
+// address 1 - power of pump 1
+// address 2 - power of pump 2
+// warning: defined both in InternetConnection.cpp and Watering.cpp !
+#define EEPROM_PUMP1_POWER_ADDRESS 1
+#define EEPROM_PUMP2_POWER_ADDRESS 2
 
 void Watering::initialize()
 {
@@ -55,25 +57,29 @@ WaterLevel Watering::getWaterLevel()
 void Watering::turnOnPump1()
 {
     Serial.println("Turn ON pump1");
+    int pump1Max = EEPROM.read(EEPROM_PUMP1_POWER_ADDRESS);
     Watering::turnOnPump(PUMP_1, pump1Max);
 }
 
 void Watering::turnOffPump1()
 {
     Serial.println("Turn OFF pump1");
+    int pump1Max = EEPROM.read(EEPROM_PUMP1_POWER_ADDRESS);
     Watering::turnOffPump(PUMP_1, pump1Max);
 }
 
 void Watering::turnOnPump2()
 {
     Serial.println("Turn ON pump2");
+    int pump2Max = EEPROM.read(EEPROM_PUMP2_POWER_ADDRESS);
     Watering::turnOnPump(PUMP_2, pump2Max);
 }
 
 void Watering::turnOffPump2()
 {
     Serial.println("Turn OFF pump2");
-   Watering::turnOffPump(PUMP_2, pump2Max);
+    int pump2Max = EEPROM.read(EEPROM_PUMP2_POWER_ADDRESS);
+    Watering::turnOffPump(PUMP_2, pump2Max);
 }
 
 void Watering::turnOnPump(int pin, int maxValue)

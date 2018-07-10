@@ -6,6 +6,7 @@
 #include <Watering.h>
 #include <SoilMoisture.h>
 #include <MeteoData.h>
+#include <EEPROM.h>
 
 class InternetConnection
 {

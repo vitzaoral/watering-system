@@ -28,8 +28,22 @@
 // V23 - IP address
 // V24 - WIFI signal strength
 
+// Pump1 power
+// V25 - slider settings
+// V26 - slider value info
+
+// Pump2 power
+// V27 - slider settings
+// V28 - slider value info
+
 WiFiClient client;
 Settings settings;
+
+// address 1 - power of pump 1
+// address 2 - power of pump 2
+// warning: defined both in InternetConnection.cpp and Watering.cpp !
+#define EEPROM_PUMP1_POWER_ADDRESS 1
+#define EEPROM_PUMP2_POWER_ADDRESS 2
 
 const char *ssid = settings.ssid;
 const char *password = settings.password;
@@ -37,6 +51,13 @@ const char *blynkAuth = settings.blynkAuth;
 
 // number of attempts to connecting WIFI, API etc.
 const int timeout = 10;
+
+// set values to EEPROM
+void setToEEPROM(int address, int value)
+{
+    EEPROM.write(address, value);
+    EEPROM.commit();
+}
 
 // Enable/disable pump1 - balcony
 BLYNK_WRITE(V2)
@@ -48,6 +69,28 @@ BLYNK_WRITE(V2)
 BLYNK_WRITE(V3)
 {
     param.asInt() ? Watering::turnOnPump2() : Watering::turnOffPump2();
+}
+
+// Set pump1 power slider, write back to blynk to confirm show
+BLYNK_WRITE(V25)
+{
+    int requiredPower = param.asInt();
+    Blynk.virtualWrite(V26, requiredPower);
+    Serial.println("Target power for pump 1 is " + String(requiredPower) + "%%");
+    // map(hodnota, minimumPůvodníStupnice, maximumPůvodníStupnice, minimumNovéStupnice, maximumNovéStupnice);
+    int result = map(requiredPower, 0, 100, 0, 1024);
+    setToEEPROM(EEPROM_PUMP1_POWER_ADDRESS, result);
+}
+
+// Set tepump2 power slider, write back to blynk to confirm show
+BLYNK_WRITE(V27)
+{
+    int requiredPower = param.asInt();
+    Blynk.virtualWrite(V28, requiredPower);
+    Serial.println("Target power for pump 2 is " + String(requiredPower) + "%%");
+    // map(hodnota, minimumPůvodníStupnice, maximumPůvodníStupnice, minimumNovéStupnice, maximumNovéStupnice);
+    int result = map(requiredPower, 0, 100, 0, 1024);
+    setToEEPROM(EEPROM_PUMP2_POWER_ADDRESS, result);
 }
 
 // Initialize WiFi connection. Return true if connection is sucessfull.

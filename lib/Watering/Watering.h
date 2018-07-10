@@ -2,6 +2,7 @@
 #define __Watering_H
 
 #include <Arduino.h>
+#include <EEPROM.h>
 
 struct WaterLevel
 {
