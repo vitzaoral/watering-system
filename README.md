@@ -25,15 +25,13 @@ struct Settings
 * [Plastic case](https://www.aliexpress.com/item/1-piece-158-90-60mm-IP65-waterproof-plastic-case-with-clear-cover-for-electronic-project-Housing/32812690691.html)
 * [Temperature sensor box](https://www.aliexpress.com/item/szomk-plastic-humidity-sensor-project-box-2-pcs-84-27-16mm-diy-wall-mounting-plastic-junction/32586666805.html)
 
-
-
-
-
 ### Schema:
 ![Schema](https://github.com/vitzaoral/watering-system/blob/master/schema/watering-system_schema.jpg)
 
 ### PCB circuit:
-TODO
+![PCB 1](https://github.com/vitzaoral/watering-system/blob/master/schema/pcb_1.jpg)
+
+![PCB 2](https://github.com/vitzaoral/watering-system/blob/master/schema/pcb_2.jpg)
 
 ### Blynk:
-TODO
+![Blynk project](https://github.com/vitzaoral/watering-system/blob/master/schema/blynk.jpg)
