@@ -89,6 +89,9 @@ void Watering::turnOnPump(int pin, int maxValue)
         analogWrite(pin, i);
         delay(5);
     }
+    // TODO: nejede pak na plny vykon, natvrdo na 100% pokud chci
+
+    digitalWrite(pin, HIGH);
 }
 
 void Watering::turnOffPump(int pin, int maxValue)
@@ -98,4 +101,5 @@ void Watering::turnOffPump(int pin, int maxValue)
         analogWrite(pin, i);
         delay(5);
     }
+    digitalWrite(pin, LOW);
 }

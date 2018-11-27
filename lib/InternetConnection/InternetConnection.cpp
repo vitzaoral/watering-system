@@ -78,7 +78,7 @@ BLYNK_WRITE(V25)
     Blynk.virtualWrite(V26, requiredPower);
     Serial.println("Target power for pump 1 is " + String(requiredPower) + "%%");
     // map(hodnota, minimumPůvodníStupnice, maximumPůvodníStupnice, minimumNovéStupnice, maximumNovéStupnice);
-    int result = map(requiredPower, 0, 100, 0, 1023);
+    int result = map(requiredPower, 0, 100, 0, 1024);
     setToEEPROM(EEPROM_PUMP1_POWER_ADDRESS, result);
 }
 
@@ -89,7 +89,7 @@ BLYNK_WRITE(V27)
     Blynk.virtualWrite(V28, requiredPower);
     Serial.println("Target power for pump 2 is " + String(requiredPower) + "%%");
     // map(hodnota, minimumPůvodníStupnice, maximumPůvodníStupnice, minimumNovéStupnice, maximumNovéStupnice);
-    int result = map(requiredPower, 0, 100, 0, 1023);
+    int result = map(requiredPower, 0, 100, 0, 1024);
     setToEEPROM(EEPROM_PUMP2_POWER_ADDRESS, result);
 }
 
