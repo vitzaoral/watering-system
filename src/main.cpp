@@ -31,13 +31,13 @@ void sendDataToInternet()
     if (apisAreConnected)
     {
         bool successBlynk = false;
-        WaterLevel waterLevel = Watering::getWaterLevel();
+        // WaterLevel waterLevel = Watering::getWaterLevel();
+        // TODO: when sensors are hidden (in winter season), comment code to avoid timeouts
+        // SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
         meteoData.setData();
-        SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
-
         successBlynk = connection.sendMeteoDataToBlynk(meteoData, meteoData.dataAreValid());
-        successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
-        successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
+        // successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
+        // successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
 
         if (successBlynk)
         {
