@@ -6,10 +6,15 @@
 struct SoilMoistureStatus
 {
     int A;
+    int analogA;
     int B;
+    int analogB;
     int C;
+    int analogC;
     int D;
+    int analogD;
     int E;
+    int analogE;
 };
 
 class SoilMoisture

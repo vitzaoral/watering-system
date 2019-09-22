@@ -12,6 +12,8 @@
 #define EEPROM_PUMP1_POWER_ADDRESS 1
 #define EEPROM_PUMP2_POWER_ADDRESS 2
 
+bool Watering::pumpIsRunning = false;
+
 void Watering::initialize()
 {
     // set pinmodes
@@ -54,6 +56,23 @@ WaterLevel Watering::getWaterLevel()
     return waterLevel;
 }
 
+///
+bool Watering::checkWaterLevel()
+{
+    if (Watering::pumpIsRunning)
+    {
+        WaterLevel waterLevel = Watering::getWaterLevel();
+        if (waterLevel.waterLevel <= 0) {
+            // turn off both pumps
+            digitalWrite(PUMP_1, LOW);
+            digitalWrite(PUMP_2, LOW);
+            Watering::pumpIsRunning = false;
+            return true;
+        }
+    }
+    return false;
+}
+
 void Watering::turnOnPump1()
 {
     Serial.println("Turn ON pump1");
@@ -84,6 +103,7 @@ void Watering::turnOffPump2()
 
 void Watering::turnOnPump(int pin, int maxValue)
 {
+    Watering::pumpIsRunning = true;
     for (int i = 0; i <= maxValue; ++i)
     {
         analogWrite(pin, i);
@@ -96,6 +116,7 @@ void Watering::turnOnPump(int pin, int maxValue)
 
 void Watering::turnOffPump(int pin, int maxValue)
 {
+    Watering::pumpIsRunning = false;
     for (int i = maxValue; i >= 0; --i)
     {
         analogWrite(pin, i);

@@ -20,6 +20,7 @@ public:
   void setMeteoDataStatusToBlynk(bool);
   void initializeOTA(void);
   void handleOTA(void);
+  void turnOffPumpButtons(void);
 };
 
 #endif

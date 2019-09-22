@@ -36,6 +36,9 @@
 // V27 - slider settings
 // V28 - slider value info
 
+// V29 - terminal balcon
+// V30 - terminal bedroom
+
 WiFiClient client;
 Settings settings;
 
@@ -51,6 +54,9 @@ const char *blynkAuth = settings.blynkAuth;
 
 // number of attempts to connecting WIFI, API etc.
 const int timeout = 10;
+
+// Attach Blynk virtual serial terminal
+WidgetTerminal terminal(V29);
 
 // set values to EEPROM
 void setToEEPROM(int address, int value)
@@ -136,7 +142,6 @@ bool InternetConnection::initializeBlynk(void)
         Blynk.run();
     }
 
-
     Serial.println(Blynk.connected() ? "Blynk connected" : "Timeout on or internet connection");
     bool connected = Blynk.connected();
 
@@ -181,6 +186,17 @@ bool InternetConnection::sendSoilMoistureToBlynk(SoilMoistureStatus status)
         Blynk.virtualWrite(V7, status.D);
         Blynk.virtualWrite(V8, status.E);
         Serial.println("Send moisture status to Blynk OK");
+
+        String terminalInfo =
+            String("A: analog: " + String(status.analogA) + "   humidity: " + String(status.A) + "%\n") +
+            String("B: analog: " + String(status.analogB) + "   humidity: " + String(status.B) + "%\n") +
+            String("C: analog: " + String(status.analogC) + "   humidity: " + String(status.C) + "%\n") +
+            String("D: analog: " + String(status.analogD) + "   humidity: " + String(status.D) + "%\n") +
+            String("E: analog: " + String(status.analogE) + "   humidity: " + String(status.E) + "%\n") +
+            "\n--------------\n";
+        terminal.println(terminalInfo);
+        terminal.flush();
+
         Blynk.run();
         return true;
     }
@@ -238,4 +254,10 @@ void InternetConnection::initializeOTA(void)
     ArduinoOTA.setHostname(settings.hostNameOTA);
     ArduinoOTA.setPassword(settings.passwordOTA);
     ArduinoOTA.begin();
+}
+
+void InternetConnection::turnOffPumpButtons()
+{
+    Blynk.virtualWrite(V2, false);
+    Blynk.virtualWrite(V3, false);
 }

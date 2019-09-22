@@ -12,7 +12,9 @@ InternetConnection connection;
 MeteoData meteoData;
 
 void sendDataToInternet();
+void checkWaterLevel();
 Ticker timerSendDataToInternet(sendDataToInternet, sendDataToInternetInterval);
+Ticker timerCheckWaterLevel(checkWaterLevel, 4500);
 
 // Connections to APIs are OK
 bool apisAreConnected = false;
@@ -26,18 +28,29 @@ void initializeInternetConnection()
     }
 }
 
+void checkWaterLevel()
+{
+    
+    if (Watering::checkWaterLevel())
+    {
+        connection.turnOffPumpButtons();
+    }
+}
+
 void sendDataToInternet()
 {
     if (apisAreConnected)
     {
         bool successBlynk = false;
-        // WaterLevel waterLevel = Watering::getWaterLevel();
-        // TODO: when sensors are hidden (in winter season), comment code to avoid timeouts
-        // SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
+
+        // TODO: winter mode, no soilMoisture and water status
+        //WaterLevel waterLevel = Watering::getWaterLevel();
+        //SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
         meteoData.setData();
+
         successBlynk = connection.sendMeteoDataToBlynk(meteoData, meteoData.dataAreValid());
-        // successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
-        // successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
+        //successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
+        //successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
 
         if (successBlynk)
         {
@@ -59,11 +72,13 @@ void sendDataToInternet()
 void startTimers()
 {
     timerSendDataToInternet.start();
+    timerCheckWaterLevel.start();
 }
 
 void updateTimers()
 {
     timerSendDataToInternet.update();
+    timerCheckWaterLevel.update();
 }
 
 void setup()

@@ -13,7 +13,9 @@ struct WaterLevel
 class Watering
 {
 public:
+  static bool pumpIsRunning;
   static void initialize();
+  static bool checkWaterLevel();
   static WaterLevel getWaterLevel();
   static void turnOnPump1();
   static void turnOnPump2();
