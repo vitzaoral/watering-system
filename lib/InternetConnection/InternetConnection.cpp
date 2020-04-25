@@ -39,6 +39,8 @@
 // V29 - terminal balcon
 // V30 - terminal bedroom
 
+// V31 - settings version
+
 WiFiClient client;
 Settings settings;
 
@@ -241,6 +243,9 @@ void InternetConnection::setMeteoDataStatusToBlynk(bool validData)
 
     Blynk.virtualWrite(V19, status);
     Blynk.setProperty(V19, "color", color);
+
+    // send settings version
+    Blynk.virtualWrite(V31, settings.version);
 }
 
 // Run OTA in loop

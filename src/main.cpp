@@ -43,14 +43,15 @@ void sendDataToInternet()
     {
         bool successBlynk = false;
 
-        // TODO: winter mode, no soilMoisture and water status
-        //WaterLevel waterLevel = Watering::getWaterLevel();
-        //SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
+        // TODO: for winter mode -> comment WaterLevel & SoilMoistureStatus
+        WaterLevel waterLevel = Watering::getWaterLevel();
+        SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
         meteoData.setData();
 
         successBlynk = connection.sendMeteoDataToBlynk(meteoData, meteoData.dataAreValid());
-        //successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
-        //successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
+        // TODO: for winter mode -> comment sendWaterLevelToBlynk & sendSoilMoistureToBlynk
+        successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
+        successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
 
         if (successBlynk)
         {
