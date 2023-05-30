@@ -44,7 +44,7 @@ WaterLevel Watering::getWaterLevel()
     }
 
     // maximum and minimum water level in cm
-    long min = 40;
+    long min = 70;
 
     waterLevel.distance = distance;
     waterLevel.waterLevel = min - distance;
@@ -59,17 +59,17 @@ WaterLevel Watering::getWaterLevel()
 ///
 bool Watering::checkWaterLevel()
 {
-    if (Watering::pumpIsRunning)
-    {
-        WaterLevel waterLevel = Watering::getWaterLevel();
-        if (waterLevel.waterLevel <= 0) {
-            // turn off both pumps
-            digitalWrite(PUMP_1, LOW);
-            digitalWrite(PUMP_2, LOW);
-            Watering::pumpIsRunning = false;
-            return true;
-        }
-    }
+    // if (Watering::pumpIsRunning)
+    // {
+    //     WaterLevel waterLevel = Watering::getWaterLevel();
+    //     if (waterLevel.waterLevel <= 0) {
+    //         // turn off both pumps
+    //         digitalWrite(PUMP_1, LOW);
+    //         digitalWrite(PUMP_2, LOW);
+    //         Watering::pumpIsRunning = false;
+    //         return true;
+    //     }
+    // }
     return false;
 }
 

@@ -5,7 +5,7 @@ Adafruit_BME280 bme;
 // Initialize and get metheorological data
 MeteoData::MeteoData()
 {
-    if (!bme.begin())
+    if (!bme.begin(0x76))
     {
         Serial.println("Could not find a valid BMP100 sensor on oaddress 0x45!");
     }

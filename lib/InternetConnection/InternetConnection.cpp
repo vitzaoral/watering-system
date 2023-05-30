@@ -1,3 +1,8 @@
+#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "TMPLnIMPHU5L"
+#define BLYNK_TEMPLATE_NAME "Terasa zavlaha"
+#define BLYNK_FIRMWARE_VERSION "2.0.3"
+
 #include "InternetConnection.h"
 #include <BlynkSimpleEsp8266.h>
 #include "../../src/settings.cpp"
@@ -168,6 +173,10 @@ bool InternetConnection::sendWaterLevelToBlynk(WaterLevel waterLevel)
         Blynk.virtualWrite(V1, waterLevel.waterLevel);
         Blynk.virtualWrite(V20, waterLevel.distance);
         Serial.println("Send water level to Blynk OK");
+        // send local IP address and WIFI signal stregth
+        Blynk.virtualWrite(V21, WiFi.localIP().toString());
+        Blynk.virtualWrite(V22, WiFi.RSSI());
+        
         Blynk.run();
         return true;
     }
