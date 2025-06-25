@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPLnIMPHU5L"
 #define BLYNK_TEMPLATE_NAME "Terasa zavlaha"
-#define BLYNK_FIRMWARE_VERSION "2.0.3"
+#define BLYNK_FIRMWARE_VERSION "2.0.4"
 
 #include "InternetConnection.h"
 #include <BlynkSimpleEsp8266.h>
@@ -223,9 +223,9 @@ bool InternetConnection::sendMeteoDataToBlynk(MeteoData meteoData, bool validDat
     // create data to send to Blynk
     if (Blynk.connected())
     {
-        Blynk.virtualWrite(V16, meteoData.temperature);
-        Blynk.virtualWrite(V17, meteoData.humidity);
-        Blynk.virtualWrite(V18, meteoData.presure);
+        Blynk.virtualWrite(V16, meteoData.sensorOutdoor.temperature);
+        Blynk.virtualWrite(V17, meteoData.sensorOutdoor.humidity);
+        // Blynk.virtualWrite(V18, meteoData.presure);
         setMeteoDataStatusToBlynk(validData);
         Blynk.run();
         Serial.println("Send data to Blynk OK");
@@ -241,6 +241,9 @@ bool InternetConnection::sendMeteoDataToBlynk(MeteoData meteoData, bool validDat
 // Static method - send message status to Blynk
 void InternetConnection::setMeteoDataStatusToBlynk(bool validData)
 {
+    // send settings version
+    Blynk.virtualWrite(V31, settings.version);
+
     char *status = (char *)"Data are OK";
     char *color = (char *)"#00FF00";
 
@@ -252,9 +255,6 @@ void InternetConnection::setMeteoDataStatusToBlynk(bool validData)
 
     Blynk.virtualWrite(V19, status);
     Blynk.setProperty(V19, "color", color);
-
-    // send settings version
-    Blynk.virtualWrite(V31, settings.version);
 }
 
 // Run OTA in loop
@@ -265,8 +265,8 @@ void InternetConnection::handleOTA(void)
 
 void InternetConnection::initializeOTA(void)
 {
-    ArduinoOTA.setHostname(settings.hostNameOTA);
-    ArduinoOTA.setPassword(settings.passwordOTA);
+    //ArduinoOTA.setHostname(settings.hostNameOTA);
+    //ArduinoOTA.setPassword(settings.passwordOTA);
     ArduinoOTA.begin();
 }
 

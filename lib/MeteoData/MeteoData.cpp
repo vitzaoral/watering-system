@@ -1,33 +1,38 @@
 #include "MeteoData.h"
 
-Adafruit_BME280 bme;
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
-// Initialize and get metheorological data
-MeteoData::MeteoData()
+void MeteoData::initializeSensors()
 {
-    if (!bme.begin(0x76))
+    if (!sht31.begin(0x44))
     {
-        Serial.println("Could not find a valid BMP100 sensor on oaddress 0x45!");
+        Serial.println("Could not find a valid SHT31 sensor on address 0x44!");
+    }
+    else
+    {
+        Serial.println("Outdoor SHT31 OK");
     }
 }
 
-void MeteoData::setData(void)
+void MeteoData::setData()
 {
-    presure = bme.readPressure() / 100.0;
-    temperature = bme.readTemperature();
-    humidity = bme.readHumidity();
-
-    Serial.print("Presure: ");
-    Serial.println(presure);
-    Serial.print("Temperature: ");
-    Serial.println(temperature);
-    Serial.print("Humidity: ");
-    Serial.println(humidity);
+    // int delayTime = 300;
+    Serial.println("");
+    Serial.print("Outdoor sensor: ");
+    sensorOutdoor.temperature = sht31.readTemperature();
+    sensorOutdoor.humidity = sht31.readHumidity();
+    MeteoData::printSensorData(&sensorOutdoor);
 }
 
-bool MeteoData::dataAreValid(void)
+void MeteoData::printSensorData(TempAndHumidity *data)
 {
-    return temperature <= 100.0 && temperature >= -100.0 &&
-           humidity <= 100.0 && humidity >= 0.0 &&
-           presure <= 1200.0 && presure >= 800.0;
+    Serial.print("temperature: " + String(data->temperature) + "°C ");
+    Serial.println("humidity: " + String(data->humidity) + "% ");
+    Serial.println("");
+}
+
+bool MeteoData::dataAreValid()
+{
+    return sensorOutdoor.temperature <= 100.0 && sensorOutdoor.temperature >= -100.0 &&
+           sensorOutdoor.humidity <= 100.0 && sensorOutdoor.humidity >= 0.0;
 }

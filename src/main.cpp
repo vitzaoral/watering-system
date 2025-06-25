@@ -89,6 +89,7 @@ void setup()
     Serial.begin(9600);
     delay(100);
     Watering::initialize();
+    meteoData.initializeSensors();
     //SoilMoisture::initialize();
 
     initializeInternetConnection();
