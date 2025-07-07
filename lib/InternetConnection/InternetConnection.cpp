@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPLnIMPHU5L"
 #define BLYNK_TEMPLATE_NAME "Terasa zavlaha"
-#define BLYNK_FIRMWARE_VERSION "2.0.4"
+#define BLYNK_FIRMWARE_VERSION "2.0.7"
 
 #include "InternetConnection.h"
 #include <BlynkSimpleEsp8266.h>
@@ -10,14 +10,9 @@
 // Blynk virtual pins:
 // V1 - water level (long)
 // V20 - water distance (long)
+// V24 - zbyvajici objem (long)
 // V2 - pump 1
 // V3 - pump 2
-
-// MoistureStatus balcoony
-// V4, V5, V6, V7, V8
-
-// MoistureStatus bedroom
-// V9, V10, V11, V12, V13, V14, V15
 
 // Meteo Data
 // V16 - temperature
@@ -31,7 +26,7 @@
 
 // WIFI - bedroom system
 // V23 - IP address
-// V24 - WIFI signal strength
+
 
 // Pump1 power
 // V25 - slider settings
@@ -42,7 +37,6 @@
 // V28 - slider value info
 
 // V29 - terminal balcon
-// V30 - terminal bedroom
 
 // V31 - settings version
 
@@ -72,16 +66,108 @@ void setToEEPROM(int address, int value)
     EEPROM.commit();
 }
 
-// Enable/disable pump1 - balcony
-BLYNK_WRITE(V2)
+// Synchronize settings from Blynk server with device when internet is connected
+BLYNK_CONNECTED()
 {
-    param.asInt() ? Watering::turnOnPump1() : Watering::turnOffPump1();
+    Blynk.syncAll();
 }
 
-// Enable/disable pump2 - bedroom
-BLYNK_WRITE(V3)
+String overTheAirURL = "";
+
+BLYNK_WRITE(InternalPinOTA)
 {
-    param.asInt() ? Watering::turnOnPump2() : Watering::turnOffPump2();
+  Serial.println("OTA Started");
+  overTheAirURL = param.asString();
+  Serial.print("overTheAirURL = ");
+  Serial.println(overTheAirURL);
+
+  HTTPClient http;
+  http.begin(client, overTheAirURL);
+
+  t_httpUpdate_return ret = ESPhttpUpdate.update(client, overTheAirURL);
+  switch (ret)
+  {
+  case HTTP_UPDATE_FAILED:
+    Serial.println("[update] Update failed.");
+    break;
+  case HTTP_UPDATE_NO_UPDATES:
+    Serial.println("[update] Update no Update.");
+    break;
+  case HTTP_UPDATE_OK:
+    Serial.println("[update] Update ok."); // may not be called since we reboot the ESP
+    break;
+  }
+}
+
+BLYNK_WRITE(V29) {
+  String cmd = param.asStr();
+  cmd.trim();                                 
+  cmd.toLowerCase();                        
+
+  if (cmd == "restart" || cmd == "reset") {
+    terminal.println("> Restarting device...");
+    terminal.flush();                         
+    delay(100);                              
+    ESP.restart();                          
+  } else {
+    terminal.print("> Unknown command: ");
+    terminal.println(cmd);
+    terminal.flush();
+  }
+}
+
+// Enable/disable pump1 (horní)
+BLYNK_WRITE(V2) {
+  int state = param.asInt();
+
+  // časové razítko
+  time_t now = time(nullptr);
+  struct tm* tm_info = localtime(&now);
+  char buf[32];
+  strftime(buf, sizeof(buf), "[%Y-%m-%d %H:%M:%S]", tm_info);
+
+  // zpráva
+  String msg = String(buf) + " - Pumpa nahoře " + (state ? "ON" : "OFF");
+
+  // na sériovou linku
+  Serial.println(msg);
+  // do Blynk terminálu
+  terminal.println(msg);
+  terminal.flush();
+
+  // vlastní akce
+  if (state) {
+    Watering::turnOnPump1();
+  } else {
+    Watering::turnOffPump1();
+  }
+}
+
+// Enable/disable pump2 (dolní)
+BLYNK_WRITE(V3) {
+  int state = param.asInt();
+
+  // časové razítko
+  time_t now = time(nullptr);
+  struct tm* tm_info = localtime(&now);
+  char buf[32];
+  strftime(buf, sizeof(buf), "[%Y-%m-%d %H:%M:%S]", tm_info);
+
+  // zpráva
+  String msg = String(buf) + " - Pumpa dole " + (state ? "ON" : "OFF");
+
+  // na sériovou linku
+  Serial.println(msg);
+  // do Blynk terminálu
+  terminal.println(msg);
+  terminal.flush();
+
+  // vlastní akce
+  if (state) {
+    Watering::turnOnPump2();
+  } else {
+    Watering::turnOffPump2();
+  }
 }
 
 // Set pump1 power slider, write back to blynk to confirm show
@@ -172,42 +258,12 @@ bool InternetConnection::sendWaterLevelToBlynk(WaterLevel waterLevel)
     {
         Blynk.virtualWrite(V1, waterLevel.waterLevel);
         Blynk.virtualWrite(V20, waterLevel.distance);
+        Blynk.virtualWrite(V24, waterLevel.litersRemaining);
         Serial.println("Send water level to Blynk OK");
         // send local IP address and WIFI signal stregth
         Blynk.virtualWrite(V21, WiFi.localIP().toString());
         Blynk.virtualWrite(V22, WiFi.RSSI());
         
-        Blynk.run();
-        return true;
-    }
-    else
-    {
-        Serial.println("Blynk is not connected.");
-        return false;
-    }
-}
-
-bool InternetConnection::sendSoilMoistureToBlynk(SoilMoistureStatus status)
-{
-    if (Blynk.connected())
-    {
-        Blynk.virtualWrite(V4, status.A);
-        Blynk.virtualWrite(V5, status.B);
-        Blynk.virtualWrite(V6, status.C);
-        Blynk.virtualWrite(V7, status.D);
-        Blynk.virtualWrite(V8, status.E);
-        Serial.println("Send moisture status to Blynk OK");
-
-        String terminalInfo =
-            String("A: analog: " + String(status.analogA) + "   humidity: " + String(status.A) + "%\n") +
-            String("B: analog: " + String(status.analogB) + "   humidity: " + String(status.B) + "%\n") +
-            String("C: analog: " + String(status.analogC) + "   humidity: " + String(status.C) + "%\n") +
-            String("D: analog: " + String(status.analogD) + "   humidity: " + String(status.D) + "%\n") +
-            String("E: analog: " + String(status.analogE) + "   humidity: " + String(status.E) + "%\n") +
-            "\n--------------\n";
-        terminal.println(terminalInfo);
-        terminal.flush();
-
         Blynk.run();
         return true;
     }
@@ -255,19 +311,6 @@ void InternetConnection::setMeteoDataStatusToBlynk(bool validData)
 
     Blynk.virtualWrite(V19, status);
     Blynk.setProperty(V19, "color", color);
-}
-
-// Run OTA in loop
-void InternetConnection::handleOTA(void)
-{
-    ArduinoOTA.handle();
-}
-
-void InternetConnection::initializeOTA(void)
-{
-    //ArduinoOTA.setHostname(settings.hostNameOTA);
-    //ArduinoOTA.setPassword(settings.passwordOTA);
-    ArduinoOTA.begin();
 }
 
 void InternetConnection::turnOffPumpButtons()

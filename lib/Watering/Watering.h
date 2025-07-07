@@ -8,6 +8,7 @@ struct WaterLevel
 {
     long distance;
     long waterLevel;
+    long litersRemaining;
 };
 
 class Watering

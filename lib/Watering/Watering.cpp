@@ -25,36 +25,56 @@ void Watering::initialize()
 
 WaterLevel Watering::getWaterLevel()
 {
-    WaterLevel waterLevel = {0, 0};
-    long distance = 0;
-    for (int i = 0; i < 10; i++)
+    WaterLevel waterLevel = {0, 0, 0};
+
+    const int samples       = 10;
+    const long sensorOffset = 4;    // cm od senzoru k hladině, když je sud plný
+    const long maxHeight    = 75;   // cm – výška sloupce vody od dna sudu
+    const long emptyDist    = maxHeight + sensorOffset; // = 79 cm
+    const long maxVolumeL   = 120;  // l při výšce vody maxHeight
+
+    long sumDist = 0;
+    for (int i = 0; i < samples; i++)
     {
+        // trig pulz
         digitalWrite(ECHO_TRIG, LOW);
         delayMicroseconds(2);
         digitalWrite(ECHO_TRIG, HIGH);
         delayMicroseconds(10);
         digitalWrite(ECHO_TRIG, LOW);
-        long duration = pulseIn(ECHO_ECHO, HIGH);
-        //Calculate the distance (in cm) based on the speed of sound.
-        distance = duration / 58.2;
-        Serial.print(distance);
-        Serial.println(" cm");
-        //Delay 100ms before next reading.
+
+        // měření (timeout 30 ms)
+        long duration = pulseIn(ECHO_ECHO, HIGH, 30000UL);
+        long dist = duration > 0 ? duration / 58.2 : emptyDist;
+        sumDist += dist;
+
+        Serial.print("Reading "); Serial.print(i+1);
+        Serial.print(": "); Serial.print(dist); Serial.println(" cm");
         delay(100);
     }
 
-    // maximum and minimum water level in cm
-    long min = 70;
+    long avgDist = sumDist / samples;
+    waterLevel.distance = avgDist;
 
-    waterLevel.distance = distance;
-    waterLevel.waterLevel = min - distance;
+    // výška vodního sloupce (cm)
+    long h = emptyDist - avgDist;
+    h = constrain(h, 0L, maxHeight);
+    waterLevel.waterLevel = h;
 
-    // get usable water column
+    // vypočti litry: 1 cm = 120/75 = 1.6 l
+    // nechť výsledek zaokrouhlíme na celé litry:
+    long liters = (h * maxVolumeL + (maxHeight/2)) / maxHeight;
+    waterLevel.litersRemaining = liters;
+
+    Serial.print("Avg distance: "); Serial.print(avgDist); Serial.println(" cm");
     Serial.print("Usable water column: ");
-    Serial.print(waterLevel.waterLevel);
-    Serial.println(" cm");
+    Serial.print(h); Serial.println(" cm");
+    Serial.print("Liters remaining: ");
+    Serial.print(liters); Serial.println(" L");
+
     return waterLevel;
 }
+
 
 ///
 bool Watering::checkWaterLevel()

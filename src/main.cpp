@@ -2,9 +2,13 @@
 #include <MeteoData.h>
 #include <InternetConnection.h>
 #include <Watering.h>
-#include <SoilMoisture.h>
 #include <Ticker.h>
 #include <EEPROM.h>
+#include <time.h>
+
+const long gmtOffset_sec    = 3600;    // standardní posun (UTC+1)
+const int  daylightOffset_sec = 3600;  // letní čas navíc
+const char* ntpServer       = "pool.ntp.org";
 
 const int sendDataToInternetInterval = 30000;
 
@@ -24,7 +28,6 @@ void initializeInternetConnection()
     if (connection.initialize())
     {
         apisAreConnected = connection.initializeBlynk();
-        connection.initializeOTA();
     }
 }
 
@@ -43,15 +46,11 @@ void sendDataToInternet()
     {
         bool successBlynk = false;
 
-        // TODO: for winter mode -> comment WaterLevel & SoilMoistureStatus
         WaterLevel waterLevel = Watering::getWaterLevel();
-        //SoilMoistureStatus soilMoistureStatus = SoilMoisture::getSoilMoistureStatus();
         meteoData.setData();
 
         successBlynk = connection.sendMeteoDataToBlynk(meteoData, meteoData.dataAreValid());
-        // TODO: for winter mode -> comment sendWaterLevelToBlynk & sendSoilMoistureToBlynk
         successBlynk &= connection.sendWaterLevelToBlynk(waterLevel);
-        //successBlynk &= connection.sendSoilMoistureToBlynk(soilMoistureStatus);
 
         if (successBlynk)
         {
@@ -90,9 +89,12 @@ void setup()
     delay(100);
     Watering::initialize();
     meteoData.initializeSensors();
-    //SoilMoisture::initialize();
 
     initializeInternetConnection();
+
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+    Serial.println("SNTP initialized");
+
     startTimers();
 }
 
@@ -100,5 +102,4 @@ void loop()
 {
     updateTimers();
     connection.runBlynk();
-    connection.handleOTA();
 }
