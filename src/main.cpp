@@ -83,9 +83,12 @@ void updateTimers()
 
 void setup()
 {
+    Serial.begin(115200);
+     delay(100);
+
     // Two bytes for power of pump1 and pump2
     EEPROM.begin(2);
-    Serial.begin(9600);
+    Serial.begin(115200);
     delay(100);
     Watering::initialize();
     meteoData.initializeSensors();
